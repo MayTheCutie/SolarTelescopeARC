@@ -30,7 +30,7 @@ def load_data(file_paths):
 
 def process_data(df):
     """Extract relevant columns and clean data."""
-    df = df.rename(columns={df.columns[0]: "Time", df.columns[1]: "Accel_X", df.columns[2]: "Accel_Y", df.columns[3]: "Accel_Z"})
+    df = df.rename(columns={df.columns[0]: "Time", df.columns[1]: "Accel_X", df.columns[2]: "Accel_Y", df.columns[3]: "Accel_Z", df.columns[4]: "Accel_abs"})
     df = df.dropna()
     return df
 
@@ -43,6 +43,7 @@ def plot_acceleration(df):
         plt.plot(subset["Time"], subset["Accel_X"], label=f"{file} - X", alpha=0.8)
         plt.plot(subset["Time"], subset["Accel_Y"], label=f"{file} - Y", alpha=0.8)
         plt.plot(subset["Time"], subset["Accel_Z"], label=f"{file} - Z", alpha=0.8)
+        plt.plot(subset["Time"], subset["Accel_abs"], label=f"{file} - Absolute", alpha=0.8)
 
     plt.xlabel("Time")
     plt.ylabel("Acceleration")
@@ -80,4 +81,4 @@ if __name__ == "__main__":
     main()
 
 #USE THIS PROMPT TO PARSE THE DATA
-#   python "C:\Users\Mario Gutierrez\Desktop\CS225\AccelerometerAnalyzer.py" "C:\Users\Mario Gutierrez\Desktop\CS225\TelescopeData\*.xlsx"
+#   python -u "c:\Users\mljg0\Documents\SolarTelescopeARC\AccelerometerAnalyzer.py" "c:\Users\mljg0\Documents\SolarTelescopeARC\Data\2_25_25_evening_trial\Acceleration without g - 2025-02-25 OPT-L-T\Raw Data.csv"
