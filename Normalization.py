@@ -1,5 +1,4 @@
 import FileOrganization as FOrg
-import numpy as np
 
 def avg_list(separated_data, output_dir):
     av_list = []
