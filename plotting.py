@@ -4,9 +4,17 @@ import FileOrganization as FOrg
 def main():
     print("To be plotted data:")
     total, output_dir = FOrg.csv_to_list()
-    print("List the upper bound - this will be used for lower bound too:")
+
+    # Cutoff is for the y_val - original cutoff stopped gathering data after
+    # x time period. As we want to cover the entire dataset BUT only exclude data
+    # points that are above and below some number, the cutoff will only apply to
+    # those points.
+    print("List the upper bound:")
     print("If you don't want a cutoff, use '100'.")
-    cutoff = float(input())
+    upper_cutoff = float(input())
+    print("List the lower bound:")
+    print("If you don't want a cutoff, use '-100'.")
+    lower_cutoff = float(input())
 
     data = []
     for row in total[1:]:  # Skip header
@@ -22,11 +30,15 @@ def main():
     # Filter the data BEFORE zipping
     filtered_data = []
     for x_val, y_val in data:
-        if y_val >= cutoff or y_val <= -cutoff:
-            break  # Stop adding once we hit or pass the cutoff
-        filtered_data.append((x_val, y_val))
+        if upper_cutoff >= y_val >= lower_cutoff and not y_val is None:
+            filtered_data.append((x_val, y_val))  # If the y_value is part of the conditions, append
+        # Do nothing otherwise
 
-    print(filtered_data)
+        # This will make the process take longer as it is moving through the entire set
+        # rather than stopping once the values hit the cutoff, but will provide data
+        # from the entire dataset except.
+
+    #print(filtered_data)
     if filtered_data:
         x, y = zip(*filtered_data)
 
