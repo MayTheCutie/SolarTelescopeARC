@@ -13,16 +13,33 @@ def main():
     # those points.
     print("List the upper bound:")
     print("If you don't want a cutoff, use '100'.")
-    upper_cutoff = float(input())
+    try:
+        upper_cutoff = float(input())
+    except ValueError:
+        upper_cutoff = 100
     print("List the lower bound:")
     print("If you don't want a cutoff, use '-100'.")
-    lower_cutoff = float(input())
+    try:
+        lower_cutoff = float(input())
+    except ValueError:
+        lower_cutoff = -100
     print("Plot types:")
     print("0 - Raw Data")
     print("1 - Analysed through Cubic Splines / Interpolated")
-    plot_type = int(input())
-    if plot_type < 0 or plot_type > 1:
+    print("2 - Moving Average")
+    try:
+        plot_type = int(input())
+        if plot_type < 0 or plot_type > 2:
+            plot_type = 0
+        if plot_type == 2:
+            print("What window size do you want? (integer)")
+            window_size = int(input())
+            if window_size <= 0:
+                window_size = 3
+    except ValueError or TypeError:
         plot_type = 0
+        window_size = 3
+
 
     data = []
     for row in total[1:]:  # Skip header
@@ -80,6 +97,27 @@ def main():
                 ax.plot(x_raw, y_smooth, '-', label='Cubic Spline Interpolation')
                 ax.legend()
                 plt.show()
+            case 2:
+                if len(y_raw) < window_size:
+                    print(f"Not enough data for window size {window_size}")
+                else:
+                    kernel = np.ones(window_size) / window_size
+                    y_avg = np.convolve(y_raw, kernel, mode='valid')
+
+                    half = window_size // 2
+                    if window_size % 2 == 0:
+                        x_avg = x_raw[half - 1: -(half)]
+                    else:
+                        x_avg = x_raw[half: -half]
+
+                    fig, ax = plt.subplots()
+                    ax.plot(x_raw, y_raw, 'o', alpha=0.3, label='Original')
+                    ax.plot(x_avg, y_avg, '-', color='orange', linewidth=2, label=f'{window_size}-Point Average')
+                    ax.legend()
+                    ax.set_xlabel("Time")
+                    ax.set_ylabel("Value")
+                    plt.title(f"{window_size}-Point Moving Average")
+                    plt.show()
     else:
         print("No valid data found to plot.")
 
