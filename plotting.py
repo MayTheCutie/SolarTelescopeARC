@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import FileOrganization as FOrg
+from scipy import interpolate as ip
+import numpy as np
 
 def main():
     print("To be plotted data:")
@@ -15,6 +17,12 @@ def main():
     print("List the lower bound:")
     print("If you don't want a cutoff, use '-100'.")
     lower_cutoff = float(input())
+    print("Plot types:")
+    print("0 - Raw Data")
+    print("1 - Analysed through Cubic Splines / Interpolated")
+    plot_type = int(input())
+    if plot_type < 0 or plot_type > 1:
+        plot_type = 0
 
     data = []
     for row in total[1:]:  # Skip header
@@ -40,13 +48,43 @@ def main():
 
     #print(filtered_data)
     if filtered_data:
-        x, y = zip(*filtered_data)
+        x_raw, y_raw = zip(*filtered_data)
+        match plot_type:
+            case 0:
+                fig, ax = plt.subplots()
+                ax.plot(x_raw, y_raw)
+                plt.show()
+            case 1:
+                # Convert to NumPy arrays for interpolation
+                x_raw = np.array(x_raw)
+                y_raw = np.array(y_raw)
 
-        fig, ax = plt.subplots()
-        ax.plot(x, y)
-        plt.show()
+                # Sort by x values (just in case)
+                sorted_indices = np.argsort(x_raw)
+                x_raw = x_raw[sorted_indices]
+                y_raw = y_raw[sorted_indices]
+
+                # Remove duplicate x values
+                _, unique_indices = np.unique(x_raw, return_index=True)
+                x_raw = x_raw[unique_indices]
+                y_raw = y_raw[unique_indices]
+
+                # Create the cubic spline interpolator
+                cs = ip.CubicSpline(x_raw, y_raw)
+
+                y_smooth = cs(x_raw)
+
+                # Plot original points and the smoothed curve
+                fig, ax = plt.subplots()
+                ax.plot(x_raw, y_raw, 'o', label='Original Data')
+                ax.plot(x_raw, y_smooth, '-', label='Cubic Spline Interpolation')
+                ax.legend()
+                plt.show()
     else:
         print("No valid data found to plot.")
+
+
+
 
 if __name__ == "__main__":
     main()
