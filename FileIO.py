@@ -46,3 +46,6 @@ def csv_to_list():
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
+# Concept - main file that refers to io and plotting and datasep, finds file requested based on
+#   terminal input info. Could refer to accelanalyzer as well if needed.

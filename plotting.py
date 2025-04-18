@@ -53,6 +53,10 @@ def main():
         window_size = 3
         max_freq = 500
 
+    # Concept - plot_meta.txt file with title, date, time, upper_cutoff, lower_cutoff,
+    #   plot_type, window_size, and max_freq. Need to figure out if ",," means null,
+    #   since the exception can incur and set those values as such
+    # Would require additional IO functions
 
     data = []
     for row in total[1:]:  # Skip header
