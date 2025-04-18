@@ -5,8 +5,11 @@ import os
 # parameters include the original data-list, the final data-list, the header field,
 #   the directory the original data-list was in, and (OPT) an additional header specifier
 #   to add to the filename
-def list_to_csv(raw_data, data_list, field, output_dir, specific_name):
-    header = specific_name + "_" + raw_data[0][field]  # Extract correct header
+def list_to_csv(raw_data, data_list, field, output_dir, specific_name=""):
+    if specific_name == "":
+        header = raw_data[0][field]  # Extract correct header
+    else:
+        header = specific_name + "_" + raw_data[0][field]
     filename = header.replace(" ", "_").replace("(m/s^2)", "") + '.csv'
     output_path = os.path.join(output_dir, filename)  # Save in same folder as Raw Data.csv
 
