@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import FileOrganization as FOrg
+import FileIO as io
 from scipy import interpolate as ip
 from scipy import fftpack
 from scipy import fft
@@ -11,7 +11,7 @@ def moving_average(data, window_size):
 
 def main():
     print("To be plotted data:")
-    total, output_dir = FOrg.csv_to_list()
+    total, output_dir = io.csv_to_list()
 
     # Cutoff is for the y_val - original cutoff stopped gathering data after
     # x time period. As we want to cover the entire dataset BUT only exclude data
