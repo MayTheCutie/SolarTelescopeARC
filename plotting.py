@@ -21,10 +21,10 @@ def user_input():
         case 0:
             print("To be plotted data:")
             total, output_dir, output_filename = io.csv_to_list()
-
+            print(total)
             if total is None:
                 print("There's no data, doing nothing")
-                return None, None, None, None, None, None
+                return None, 0, 100, -100, 10, 500, -1
 
         case 1:
             print("No input data added")
