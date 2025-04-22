@@ -23,8 +23,9 @@ def list_to_csv(raw_data, data_list, field, output_dir, specific_name=""):
 
 # transforms a csv file to a list, where it asks the user for a path, checks if it
 #   exists, checks if it is in the SolarTelescopeARC directory, then creates the list
-def csv_to_list():
-    filename = input('State the full path of the file:\n')
+def csv_to_list(filename=None):
+    if filename is None:
+        filename = input('State the full path of the file:\n')
 
     # Ensure that 'SolarTelescopeARC\\' exists in the path
     index = filename.find('SolarTelescopeARC\\')
@@ -37,15 +38,42 @@ def csv_to_list():
         return
 
     output_dir = os.path.dirname(filename)  # Get directory of Raw Data.csv
+    output_filename = filename[filename.rfind('\\') + 1:]
 
     try:
-        with open(filename, newline='') as csvfile:
-            raw_data = list(csv.reader(csvfile, delimiter=','))
-            print("File successfully loaded!")
-        return raw_data, output_dir
+        if output_filename.lower().endswith(".csv"):
+            with open(filename, newline='') as csvfile:
+                raw_data = list(csv.reader(csvfile, delimiter=','))
+
+                # Null/Empty/None check
+                has_nulls = False
+                for row_idx, row in enumerate(raw_data):
+                    for col_idx, val in enumerate(row):
+                        if val is None or val.strip() == "":
+                            print(f"Null/empty value found at row {row_idx + 1}, column {col_idx + 1}")
+                            has_nulls = True
+
+                if has_nulls:
+                    print(
+                        "Warning: Null or empty values were found in the data. Please clean or handle them before plotting.")
+                else:
+                    print("File successfully loaded with no null values!")
+
+                print("File successfully loaded!")
+        elif output_filename.lower().endswith(".txt"):
+            with open(filename, "r") as txtfile:
+                for line in txtfile:
+                    raw_data = line.strip().split(',')
+        else:
+            raw_data = None
+            print("Your file does not follow guidelines, applying defaults")
+        #print(raw_data)
+        return raw_data, output_dir, output_filename
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        return None, None, None
+
 
 # Concept - main file that refers to io and plotting and datasep, finds file requested based on
 #   terminal input info. Could refer to accelanalyzer as well if needed.
