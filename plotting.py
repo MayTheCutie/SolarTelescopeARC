@@ -59,22 +59,33 @@ def user_input():
                  3 - Fourier Transform""")
     try:
         plot_type = int(input())
-        if plot_type < 0 or plot_type > 3:
+        if plot_type not in [0, 1, 2, 3]:
             plot_type = 0
-        if plot_type == 2:
-            print("What window size do you want? (integer)")
-            window_size = int(input())
-            if window_size <= 0:
-                window_size = 3  # default window_size, not min but good enough yk?
-        if plot_type == 3:
-            print("What is the maximum frequency you would like to plot?")
-            max_freq = float(input())
-            if max_freq <= 0:
-                max_freq = 500  # default max_freq, can be bigger or smaller, but not 0 or below
-    except ValueError or TypeError:
+    except ValueError:
         plot_type = 0
-        window_size = 3
-        max_freq = 500
+
+    # Set defaults
+    window_size = 3
+    max_freq = 500
+
+    # Get additional input depending on plot type
+    if plot_type == 2:
+        try:
+            print("Enter window size (default = 3):")
+            ws = int(input())
+            if ws > 0:
+                window_size = ws
+        except ValueError:
+            pass
+
+    if plot_type == 3:
+        try:
+            print("Enter max frequency to plot (default = 500 Hz):")
+            mf = float(input())
+            if mf > 0:
+                max_freq = mf
+        except ValueError:
+            pass
 
     return total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, time_cutoff
 
