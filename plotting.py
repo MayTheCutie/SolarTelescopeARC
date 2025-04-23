@@ -238,17 +238,3 @@ def fourier_plot(x_raw, y_raw, max_freq, filename):
     ax.grid(True)
     fig.tight_layout()
     fig.savefig(filename_input(filename, "fourier-plot"))
-
-def main():
-
-    # Concept - z_plot_properties.txt file with title, date, time, upper_cutoff, lower_cutoff,
-    #   plot_type, window_size, and max_freq. Need to figure out if ",," means null,
-    #   since the exception can incur and set those values as such
-    # Would require additional IO functions
-
-    total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, time_cutoff = user_input()
-    filtered_data = data_things(total, upper_cutoff, lower_cutoff, time_cutoff)
-    match_plot(filtered_data, plot_type, window_size, max_freq)
-
-if __name__ == "__main__":
-    main()
