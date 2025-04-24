@@ -158,11 +158,15 @@ def match_plot(filtered_data, plot_type, window_size, max_freq, filename):
 
 def raw_data_plot(x_raw, y_raw, filename):
     fig, ax = plt.subplots()
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Acceleration (m/s^2)")
     ax.plot(x_raw, y_raw)
     fig.savefig(filename_input(filename, "raw-data-plot"))
 
 
 def cubic_spline_plot(x_raw, y_raw, filename):
+    # We will either replace this or make a diff function for the total moving avg between all the sets
+
     # Convert to NumPy arrays for interpolation
     x_raw = np.array(x_raw)
     y_raw = np.array(y_raw)
@@ -185,6 +189,8 @@ def cubic_spline_plot(x_raw, y_raw, filename):
 
     # Plot original points and the smoothed curve
     fig, ax = plt.subplots()
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Acceleration (m/s^2)")
     ax.plot(x_raw, y_raw, 'o', label='Original Data')
     ax.plot(x_raw, y_smooth, '-', label='Cubic Spline Interpolation')
     ax.legend()
@@ -206,8 +212,8 @@ def moving_avg_plot(x_raw, y_raw, window_size, filename):
         ax.plot(x_raw, y_raw, 'o', alpha=0.3, label='Original')
         ax.plot(x_avg, y_avg, '-', color='orange', linewidth=2, label=f'{window_size}-Point Average')
         ax.legend()
-        ax.set_xlabel("Time")
-        ax.set_ylabel("Value")
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("Acceleration (m/s^2)")
         ax.set_title(f"{window_size}-Point Moving Average")
         fig.savefig(filename_input(filename, "moving-avg-plot"))
 

@@ -36,7 +36,7 @@ def sep_abs(raw_data, output_dir):
 
 def main():
     star_time = time.time()
-    raw_data, output_dir = io.csv_to_list()
+    raw_data, output_dir, filename = io.csv_to_list()
     try:
 
         # Generate and save new CSV files in the same directory
