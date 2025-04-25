@@ -1,3 +1,4 @@
+import random
 import FileIO as io
 import plotting as plt
 import os
@@ -5,12 +6,14 @@ import matplotlib.pyplot as mpl
 
 data_list = []
 properties_list = []
+data_names = []
 option = 0
 
 # This initial section will
 print("Input Data: (Absolute Path)")
 initial_data, output_dir_data, output_filename_data = io.csv_to_list()
 data_list.append(initial_data)
+data_names.append(output_filename_data.split("_.")[0].replace("_", " "))
 print("Plot Properties: (Absolute Path)")
 properties, output_dir_properties, output_properties = io.csv_to_list()
 properties_list.append(properties)
@@ -18,6 +21,7 @@ while True:
     print("Input Data: (Absolute Path)")
     added_data, o_d_d_temp, o_f_d_temp = io.csv_to_list()
     data_list.append(added_data)
+    data_names.append(o_f_d_temp.split("_.")[0].replace("_", " "))
     print("Plot Properties: (Absolute Path)")
     properties, o_d_p_temp, o_f_p_temp = io.csv_to_list()
     properties_list.append(properties)
@@ -110,11 +114,17 @@ for idx, (plot_properties, data) in enumerate(zip(properties_list, data_list)):
 
 def get_cmap(n, name='hsv'):
     """Returns a function that maps each index in 0, 1, ..., n-1 to a distinct RGB color."""
-    return mpl.colormaps[name].resampled(n)
+    return mpl.colormaps[name]
 
+def generate_random_colors(n, cmap_name='tab20'):
+    cmap = mpl.colormaps[cmap_name].resampled(n)
+    colors = [cmap(k / n) for k in range(n)]
+    random.shuffle(colors)
+    return colors
 
 def overlay_moving_avg_plots(data_lists, window, fn):
     fig, ax = mpl.subplots()
+    colors = generate_random_colors(len(data_lists))
 
     for j, data_temp in enumerate(data_lists):
         x_raw = [pt[0] for pt in data_temp]
@@ -123,9 +133,10 @@ def overlay_moving_avg_plots(data_lists, window, fn):
         x_avg, y_avg = plt.moving_avg(x_raw, y_raw, window)
         if x_avg is None or y_avg is None:
             continue
-        cmap = get_cmap(len(data_list))
-        color = cmap(j) if cmap else None
-        ax.plot(x_avg, y_avg, '-', linewidth=2, label=f'Dataset {j+1}', color=color)
+
+        label = data_names[j] if data_names and j < len(data_names) else f'Dataset {j + 1}'
+
+        ax.plot(x_avg, y_avg, '-', linewidth=2, color=colors[j], label=label)
 
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Acceleration (m/s²)")
