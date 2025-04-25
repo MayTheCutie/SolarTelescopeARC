@@ -10,13 +10,13 @@ try:
     plot_properties_opt = int(input())
 except ValueError:
     plot_properties_opt = 1 #default as user input
+properties = []
 match plot_properties_opt:
     case 0:
         print("Plot Properties:")
         properties, output_dir_properties, output_properties = io.csv_to_list()
     case 1:
-        total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, time_cutoff = plt.user_input()
-        properties = []
+        total, *properties = plt.user_input()
 
 # Make the final plot be in Graphs dir
 output_filename = output_filename_data.split(".")
