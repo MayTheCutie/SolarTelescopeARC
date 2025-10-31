@@ -5,11 +5,11 @@ import os
 # parameters include the original data-list, the final data-list, the header field,
 #   the directory the original data-list was in, and (OPT) an additional header specifier
 #   to add to the filename
-def list_to_csv(raw_data, data_list, field, output_dir, specific_name=""):
-    if specific_name == "":
+def list_to_csv(raw_data, data_list, field=None, output_dir="SolarTelescopeARC\\", specific_name=""):
+    if specific_name == "" and field is not None:
         header = raw_data[0][field]  # Extract correct header
     else:
-        header = specific_name + "_" + raw_data[0][field]
+        header = specific_name
     filename = header.replace(" ", "_").replace("(m/s^2)", "") + '.csv'
     output_path = os.path.join(output_dir, filename)  # Save in same folder as Raw Data.csv
 
@@ -21,21 +21,23 @@ def list_to_csv(raw_data, data_list, field, output_dir, specific_name=""):
     print(f"File saved: {output_path}")
     return output_path
 
-# transforms a csv file to a list, where it asks the user for a path, checks if it
-#   exists, checks if it is in the SolarTelescopeARC directory, then creates the list
+# transforms a csv file to a list, where it asks the user for a relative path of the csv
 def csv_to_list(filename=None):
     if filename is None:
         filename = input('State the full path of the file:\n')
 
+    # using relative paths we dont have to worry about this
+    """
     # Ensure that 'SolarTelescopeARC\\' exists in the path
     index = filename.find('SolarTelescopeARC\\')
     if index == -1:
         print("Error: The path does not contain 'SolarTelescopeARC\\'. Please provide a correct path.")
-        return
+        return None
+    """
 
     if not os.path.exists(filename):
         print(f"Error: The file '{filename}' was not found.")
-        return
+        return None
 
     output_dir = os.path.dirname(filename)  # Get directory of Raw Data.csv
     output_filename = filename[filename.rfind('\\') + 1:]
