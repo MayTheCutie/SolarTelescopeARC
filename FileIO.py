@@ -1,10 +1,14 @@
 import csv
 import os
+import numpy as np
+import pandas as pd
+
 
 # transforms a list into a csv file and returns the resulting path
 # parameters include the original data-list, the final data-list, the header field,
 #   the directory the original data-list was in, and (OPT) an additional header specifier
 #   to add to the filename
+"""
 def list_to_csv(raw_data, data_list, field=None, output_dir="SolarTelescopeARC\\", specific_name=""):
     if specific_name == "" and field is not None:
         header = raw_data[0][field]  # Extract correct header
@@ -20,6 +24,16 @@ def list_to_csv(raw_data, data_list, field=None, output_dir="SolarTelescopeARC\\
 
     print(f"File saved: {output_path}")
     return output_path
+"""
+# list_to_csv
+# inputs a pd.DataFrame (2D list), and saves a csv of the DataFrame to the parent directory of the raw_data file
+# parameters:
+#   df: pd.DataFrame - DataFrame type, the data you choose to turn into a csv
+#   cols - headers
+#   output_dir - the parent directory of the original raw_data file
+def list_to_csv(df: pd.DataFrame, cols, output_dir=".\\Data\\misc\\"):
+    return None
+
 
 # transforms a csv file to a list, where it asks the user for a relative path of the csv
 def csv_to_list(filename=None):

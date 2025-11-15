@@ -1,6 +1,7 @@
 import time
 import FileIO as io
 import numpy as np
+import pandas as pd
 
 # acceleration in x - m/s^2
 def sep_accx(raw_data, output_dir):
