@@ -28,17 +28,25 @@ def list_to_csv(raw_data, data_list, field=None, output_dir="SolarTelescopeARC\\
 # list_to_csv
 # inputs a pd.DataFrame (2D list), and saves a csv of the DataFrame to the parent directory of the raw_data file
 # parameters:
-#   df: pd.DataFrame - DataFrame type, the data you choose to turn into a csv
-#   cols - headers
+#   df: pd.DataFrame - DataFrame type, the 2D data list you choose to turn into a csv. does not include header, is only data
+#   data_type: str - the name of the data from the header - raw_data[0][#]
 #   output_dir - the parent directory of the original raw_data file
-def list_to_csv(df: pd.DataFrame, cols, output_dir=".\\Data\\misc\\"):
-    return None
+def list_to_csv(df: pd.DataFrame, data_type: str, output_dir=".\\Data\\misc\\"):
+    filename = data_type + ".csv"
+    header = pd.DataFrame(["Time Lapsed", data_type])
+
+    return header.concat(df).to_csv(filename, index=False)
 
 
 # transforms a csv file to a list, where it asks the user for a relative path of the csv
 def csv_to_list(filename=None):
     if filename is None:
-        filename = input('State the full path of the file:\n')
+        # Relative Path refers to the main directory, SolarTelescopeARC, as just a period.
+        #   .\Data\10_29_2025_midnight_trial\soltel.csv
+        # From the main dir, just say where the csv file is that you're looking for, and then that output dir is the
+        # same that where your csv file is.
+        #   output_dir = "10_29_2025_midnight_trial\\"
+        filename = input('State the relative path of the file:\n')
 
     # using relative paths we dont have to worry about this
     """
