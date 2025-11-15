@@ -87,7 +87,7 @@ def csv_to_list(filename=None):
         elif output_filename.lower().endswith(".txt"):
             with open(filename, "r") as txtfile:
                 for line in txtfile:
-                    raw_data = pd.DataFrame(line.strip().split(','))
+                    raw_data = line.strip().split(',')
         else:
             raw_data = None
             print("Your file does not follow guidelines, applying defaults")
