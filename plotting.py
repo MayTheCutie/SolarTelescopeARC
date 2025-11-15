@@ -94,7 +94,7 @@ def user_input():
         except ValueError:
             pass
 
-    return total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, s_time_cutoff, e_time_cutoff
+    return total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, s_time_cutoff, e_time_cutoff, output_filename
 
 def data_things(total, upper_cutoff, lower_cutoff, s_time_cutoff, e_time_cutoff):
     if total is None:
@@ -287,3 +287,10 @@ def overlay_moving_avg_plots(data_lists, window_size, filename, colors=None):
     ax.legend()
     fig.savefig(filename_input(filename, "stacked-moving-avg"))
 
+def main():
+    total, plot_type, upper_cutoff, lower_cutoff, window_size, max_freq, s_time_cutoff, e_time_cutoff, output_filename = user_input()
+    filtered_data = data_things(total, upper_cutoff, lower_cutoff, s_time_cutoff, e_time_cutoff)
+    match_plot(filtered_data, plot_type, window_size, max_freq, output_filename)
+
+if __name__ == "__main__":
+    main()
