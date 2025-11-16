@@ -5,23 +5,49 @@ import pandas as pd
 
 # acceleration in x - m/s^2
 def sep_accx(raw_data, output_dir):
-    data_x = []
-    print("spot 4")
-    for idx, row in raw_data.iloc[1:].iterrows():  # Skip header row
-        print("spot 5")
-        print(raw_data[i])
-        temp_x = [raw_data[i][0], raw_data[i][1] * 9.81]
-        print("spot 6")
-        data_x.append(temp_x)
-    return io.list_to_csv(pd.DataFrame(data_x), "Acceleration_in_X", output_dir)
+
+    """
+    we want to use the first ROW. but because of pandas, the first ROW is labelled as a COLUMN - all COLUMNS of ROW 1
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
+
+
+    # Select relevant columns
+    df_acc_x = raw_data[['Time', 'Acceleration X']].copy()
+    print("spot A")
+    # Convert Acceleration X to float and multiply by 9.81
+    df_acc_x['Acceleration X'] = pd.to_numeric(df_acc_x['Acceleration X'], errors='coerce') * 9.81
+    print("spot B")
+    # Drop any rows with NaN (from failed conversion)
+    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    print("spot C")
+    # Save to same directory
+    return io.list_to_csv(pd.DataFrame(df_acc_x), "Acceleration_X", output_dir)
+
 
 # acceleration in y - m/s^2
 def sep_accy(raw_data, output_dir):
-    data_y = []
-    for i in range(1, len(raw_data)):
-        temp_y = [raw_data[i][0], raw_data[i][2] * 9.81]
-        data_y.append(temp_y)
-    return io.list_to_csv(pd.DataFrame(data_y), "Acceleration_in_Y", output_dir)
+    # 1. Clean column names
+    raw_data.columns = [str(c).strip() for c in raw_data.columns]
+
+    # 2. Convert first two columns to numeric, invalid entries become NaN
+    raw_data.iloc[:, 0] = pd.to_numeric(raw_data.iloc[:, 0], errors='coerce')
+    raw_data.iloc[:, 1] = pd.to_numeric(raw_data.iloc[:, 1], errors='coerce')
+
+    # 3. Drop rows where either column is NaN
+    clean_data = raw_data.dropna(subset=[raw_data.columns[0], raw_data.columns[1]])
+
+    # 4. Multiply second column by 9.81
+    clean_data.iloc[:, 1] = clean_data.iloc[:, 1] * 9.81
+
+    # 5. Create the output DataFrame with the two columns
+    df_out = clean_data.iloc[:, [0, 1]].reset_index(drop=True)
+
+    # 6. Export to CSV
+    return io.list_to_csv(df_out, "Acceleration_in_Y", output_dir)
 
 # acceleration in z - m/s^2
 def sep_accz(raw_data, output_dir):
@@ -178,7 +204,7 @@ def timestep_fix(time: pd.Series):
             if i == 1:
                 initial_time = fixed_time
                 start = temp
-                print(temp, temp_sec, temp_min, temp_hr, fixed_time)
+                #print(temp, temp_sec, temp_min, temp_hr, fixed_time)
 
             # while temp is between the start time and before the last millisecond of the day
             if float(start) <= float(temp) < 235959.999:
@@ -191,7 +217,7 @@ def timestep_fix(time: pd.Series):
                 fixed_time += (before_midnight - initial_time)
 
             truncated = int(fixed_time * 1000 + 1e-12) / 1000
-            print(truncated)
+            #print(truncated)
             fixed.append(f"{truncated:.3f}")
         return pd.Series(fixed)
 
@@ -213,7 +239,9 @@ def main():
                                        # our crude attempt at implementing pandas went poorly :(
         print("spot 3")
         sep_accy(raw_data, output_dir)
+        print("spot 4")
         sep_accz(raw_data, output_dir)
+        print("spot 5")
         gen_accabs(raw_data, output_dir)
         sep_anvx(raw_data, output_dir)
         sep_anvy(raw_data, output_dir)

@@ -32,80 +32,80 @@ def list_to_csv(raw_data, data_list, field=None, output_dir="SolarTelescopeARC\\
 #   data_type: str - the name of the data from the header - raw_data[0][#]
 #   output_dir - the parent directory of the original raw_data file
 def list_to_csv(df: pd.DataFrame, data_type: str, output_dir=".\\Data\\misc\\"):
-    filename = data_type + ".csv"
-    header = pd.DataFrame(["Time Lapsed", data_type])
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
 
-    return header.concat(df).to_csv(filename, index=False)
+    # Full path for the output file
+    filename = os.path.join(output_dir, data_type + ".csv")
+
+    # Save DataFrame to CSV with header and no index column
+    df.to_csv(filename, index=False, header=["Time Lapsed", data_type])
+
+    return filename  # Return the full path for reference
 
 
 # transforms a csv file to a list, where it asks the user for a relative path of the csv
 def csv_to_list(filename=None):
-    if filename is None:
-        # Relative Path refers to the main directory, SolarTelescopeARC, as just a period.
-        #   .\Data\10_29_2025_midnight_trial\soltel.csv
-        # From the main dir, just say where the csv file is that you're looking for, and then that output dir is the
-        # same that where your csv file is.
-        #   output_dir = "10_29_2025_midnight_trial\\"
-        filename = input('State the relative path of the file:\n')
+    """
+        Load a CSV file, keeping only rows where all values are present (no NaN, None, or empty strings).
 
-    # using relative paths we dont have to worry about this
-    """
-    # Ensure that 'SolarTelescopeARC\\' exists in the path
-    index = filename.find('SolarTelescopeARC\\')
-    if index == -1:
-        print("Error: The path does not contain 'SolarTelescopeARC\\'. Please provide a correct path.")
-        return None
-    """
+        Returns:
+            cleaned_data: DataFrame with complete rows
+            output_dir: directory of the CSV
+            output_filename: name of the CSV
+        """
+    if filename is None:
+        filename = input("State the relative path of the file:\n")
 
     if not os.path.exists(filename):
         print(f"Error: The file '{filename}' was not found.")
-        return None
+        return None, None, None
 
-    output_dir = os.path.dirname(filename)  # Get directory of Raw Data.csv
-    output_filename = filename[filename.rfind('\\') + 1:]
+    output_dir = os.path.dirname(filename)
+    output_filename = os.path.basename(filename)
+    print(f"Loading file: {output_filename}")
 
     try:
-        if output_filename.lower().endswith(".csv"):
-
-            raw_data = pd.read_csv(filename, header=None)
-
-            # Create a mask of empty/null cells
-            # Mask for cells that are None or NaN
-            null_mask = raw_data.isna() | raw_data.isnull()  # catches NaN
-
-            # Mask for cells that are empty or whitespace strings
-            empty_str_mask = raw_data.apply(lambda x: isinstance(x, str) and x.strip() == "")
-
-            # Combine both masks
-            empty_mask = null_mask | empty_str_mask
-
-            if empty_mask.any().any():  # check if any True exists in the DataFrame
-                has_nulls = True
-                # Find the indices of empty/null cells
-                null_positions = empty_mask.stack()[lambda x: x].index  # MultiIndex of (row_idx, col_name)
-
-                for row_idx, col_name in null_positions:
-                    col_idx = raw_data.columns.get_loc(col_name)  # get numeric column index
-                    print(f"Null/empty value found at row {row_idx + 1}, column {col_idx + 1}")
-
-                print(
-                    "Warning: Null or empty values were found in the data. Please clean or handle them before plotting."
-                )
-            else:
-                has_nulls = False
-                print("File successfully loaded with no null values!")
-
-            print("File successfully loaded!")
-        else:
-            raw_data = None
+        if not output_filename.lower().endswith(".csv"):
             print("Your file does not follow guidelines, applying defaults")
-        #print(raw_data)
-        return raw_data, output_dir, output_filename
+            return None, None, None
+
+        # Define expected columns
+        cols = ['Time', 'Acceleration X', 'Acceleration Y', 'Acceleration Z',
+                   'Angular velocity X', 'Angular velocity Y', 'Angular velocity Z',
+                   'Angle X', 'Angle Y', 'Angle Z',
+                   'Magnetic field X', 'Magnetic field Y', 'Magnetic field Z',
+                   'Temperature']
+
+        # Load CSV without skipping header
+        raw_data = pd.read_csv(filename, skipinitialspace=True, header=None, names=cols)
+        raw_data.columns = [str(c).strip() for c in raw_data.columns]
+
+        # Fix Unnamed: 0 if present
+        if 'Unnamed 0' in raw_data.columns:
+            raw_data = raw_data.rename(columns={'Unnamed 0': 'Time'})
+
+        # Strip whitespace from all cells
+        raw_data = raw_data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+        # Keep only rows where all values are present (not empty and not NaN)
+        empty_mask = raw_data.applymap(lambda x: x == "" if isinstance(x, str) else False)
+        nan_mask = raw_data.isna()
+        invalid_mask = empty_mask | nan_mask
+        cleaned_data = raw_data[~invalid_mask.any(axis=1)].reset_index(drop=True)
+
+        removed_rows = len(raw_data) - len(cleaned_data)
+        if removed_rows > 0:
+            print(f"Removed {removed_rows} rows with missing or empty values.")
+        else:
+            print("All rows are complete. No missing values found.")
+
+        print(f"Columns after cleaning: {list(cleaned_data.columns)}")
+        return cleaned_data, output_dir, output_filename
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return None, None, None
-
 
 # Concept - main file that refers to io and plotting and datasep, finds file requested based on
 #   terminal input info. Could refer to accelanalyzer as well if needed.
