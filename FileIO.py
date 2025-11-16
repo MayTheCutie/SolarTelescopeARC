@@ -66,28 +66,36 @@ def csv_to_list(filename=None):
 
     try:
         if output_filename.lower().endswith(".csv"):
-            with open(filename, newline='') as csvfile:
-                raw_data = list(csv.reader(csvfile, delimiter=','))
 
-                # Null/Empty/None check
+            raw_data = pd.read_csv(filename, header=None)
+
+            # Create a mask of empty/null cells
+            # Mask for cells that are None or NaN
+            null_mask = raw_data.isna() | raw_data.isnull()  # catches NaN
+
+            # Mask for cells that are empty or whitespace strings
+            empty_str_mask = raw_data.apply(lambda x: isinstance(x, str) and x.strip() == "")
+
+            # Combine both masks
+            empty_mask = null_mask | empty_str_mask
+
+            if empty_mask.any().any():  # check if any True exists in the DataFrame
+                has_nulls = True
+                # Find the indices of empty/null cells
+                null_positions = empty_mask.stack()[lambda x: x].index  # MultiIndex of (row_idx, col_name)
+
+                for row_idx, col_name in null_positions:
+                    col_idx = raw_data.columns.get_loc(col_name)  # get numeric column index
+                    print(f"Null/empty value found at row {row_idx + 1}, column {col_idx + 1}")
+
+                print(
+                    "Warning: Null or empty values were found in the data. Please clean or handle them before plotting."
+                )
+            else:
                 has_nulls = False
-                for row_idx, row in enumerate(raw_data):
-                    for col_idx, val in enumerate(row):
-                        if val is None or val.strip() == "":
-                            print(f"Null/empty value found at row {row_idx + 1}, column {col_idx + 1}")
-                            has_nulls = True
+                print("File successfully loaded with no null values!")
 
-                if has_nulls:
-                    print(
-                        "Warning: Null or empty values were found in the data. Please clean or handle them before plotting.")
-                else:
-                    print("File successfully loaded with no null values!")
-
-                print("File successfully loaded!")
-        elif output_filename.lower().endswith(".txt"):
-            with open(filename, "r") as txtfile:
-                for line in txtfile:
-                    raw_data = line.strip().split(',')
+            print("File successfully loaded!")
         else:
             raw_data = None
             print("Your file does not follow guidelines, applying defaults")

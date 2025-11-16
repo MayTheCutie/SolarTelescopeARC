@@ -7,7 +7,7 @@ import pandas as pd
 def sep_accx(raw_data, output_dir):
     data_x = []
     print("spot 4")
-    for i in range(1, raw_data[raw_data.columns[0]].count()):  # Skip header row
+    for idx, row in raw_data.iloc[1:].iterrows():  # Skip header row
         print("spot 5")
         print(raw_data[i])
         temp_x = [raw_data[i][0], raw_data[i][1] * 9.81]
@@ -184,14 +184,15 @@ def timestep_fix(time: pd.Series):
             if float(start) <= float(temp) < 235959.999:
                 before_midnight = fixed_time
                 fixed_time -= initial_time
-                print(fixed_time)
+
 
             # while temp is before start
             if float(temp) < float(start):
                 fixed_time += (before_midnight - initial_time)
-                print(fixed_time)
 
-            fixed.append('%.3f'%fixed_time)
+            truncated = int(fixed_time * 1000 + 1e-12) / 1000
+            print(truncated)
+            fixed.append(f"{truncated:.3f}")
         return pd.Series(fixed)
 
 def main():
