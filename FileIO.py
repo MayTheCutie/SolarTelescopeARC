@@ -70,16 +70,25 @@ def csv_to_list(filename=None):
             print("Your file does not follow guidelines, applying defaults")
             return None, None, None
 
-        # Define expected columns
-        cols = ['Time', 'Acceleration X', 'Acceleration Y', 'Acceleration Z',
-                   'Angular velocity X', 'Angular velocity Y', 'Angular velocity Z',
-                   'Angle X', 'Angle Y', 'Angle Z',
-                   'Magnetic field X', 'Magnetic field Y', 'Magnetic field Z',
-                   'Temperature']
-
         # Load CSV without skipping header
-        raw_data = pd.read_csv(filename, skipinitialspace=True, header=None, names=cols)
-        raw_data.columns = [str(c).strip() for c in raw_data.columns]
+        raw_data = pd.read_csv(filename, skipinitialspace=True)
+        raw_data.columns = [c.strip() for c in raw_data.columns]
+
+        # Standardize all expected names
+        rename_map = {
+            'Acceleration X': 'Acceleration X',
+            'Acceleration Y': 'Acceleration Y',
+            'Acceleration Z': 'Acceleration Z',
+            'Angular velocity X': 'Angular velocity X',
+            'Angular velocity Y': 'Angular velocity Y',
+            'Angular velocity Z': 'Angular velocity Z',
+            'Magnetic field X': 'Magnetic field X',
+            'Magnetic field Y': 'Magnetic field Y',
+            'Magnetic field Z': 'Magnetic field Z',
+        }
+
+        raw_data = raw_data.rename(columns=lambda x: x.strip())
+        raw_data = raw_data.rename(columns=rename_map)
 
         # Fix Unnamed: 0 if present
         if 'Unnamed 0' in raw_data.columns:
