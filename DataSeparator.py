@@ -36,16 +36,16 @@ def sep_accy(raw_data, output_dir):
     """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Acceleration Y']].copy()
+    df_acc_y = raw_data[['Time', 'Acceleration Y']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Acceleration Y'] = pd.to_numeric(df_acc_x['Acceleration Y'], errors='coerce') * 9.81
+    df_acc_y['Acceleration Y'] = pd.to_numeric(df_acc_y['Acceleration Y'], errors='coerce') * 9.81
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_acc_y = df_acc_y.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Acceleration_Y", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_acc_y), "Acceleration_Y", output_dir)
 
 # acceleration in z - m/s^2
 def sep_accz(raw_data, output_dir):
@@ -56,16 +56,16 @@ def sep_accz(raw_data, output_dir):
     """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Acceleration Z']].copy()
+    df_acc_z = raw_data[['Time', 'Acceleration Z']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Acceleration Z'] = pd.to_numeric(df_acc_x['Acceleration Z'], errors='coerce') * 9.81
+    df_acc_z['Acceleration Z'] = pd.to_numeric(df_acc_z['Acceleration Z'], errors='coerce') * 9.81
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_acc_z = df_acc_z.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Acceleration_Z", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_acc_z), "Acceleration_Z", output_dir)
 
 # absolute acceleration - m/s^2
 # only for use with the data before the 2025-26 academic year
@@ -104,16 +104,16 @@ def sep_anvx(raw_data, output_dir):
         """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angular velocity X']].copy()
+    df_anv_x = raw_data[['Time', 'Angular velocity X']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angular velocity X'] = pd.to_numeric(df_acc_x['Angular velocity X'], errors='coerce') * 1.00
+    df_anv_x['Angular velocity X'] = pd.to_numeric(df_anv_x['Angular velocity X'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_anv_x = df_anv_x.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angular_Velocity_X", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_anv_x), "Angular_Velocity_X", output_dir)
 
 # angular velocity in y - degrees/s
 def sep_anvy(raw_data, output_dir):
@@ -124,16 +124,16 @@ def sep_anvy(raw_data, output_dir):
             """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angular velocity Y']].copy()
+    df_anv_y = raw_data[['Time', 'Angular velocity Y']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angular velocity Y'] = pd.to_numeric(df_acc_x['Angular velocity Y'], errors='coerce') * 1.00
+    df_anv_y['Angular velocity Y'] = pd.to_numeric(df_anv_y['Angular velocity Y'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_anv_y = df_anv_y.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angular_Velocity_Y", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_anv_y), "Angular_Velocity_Y", output_dir)
 
 # angular velocity in z - degrees/s
 def sep_anvz(raw_data, output_dir):
@@ -144,16 +144,16 @@ def sep_anvz(raw_data, output_dir):
             """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angular velocity Z']].copy()
+    df_anv_z = raw_data[['Time', 'Angular velocity Z']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angular velocity Z'] = pd.to_numeric(df_acc_x['Angular velocity Z'], errors='coerce') * 1.00
+    df_anv_z['Angular velocity Z'] = pd.to_numeric(df_anv_z['Angular velocity Z'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_anv_z = df_anv_z.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angular_Velocity_Z", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_anv_z), "Angular_Velocity_Z", output_dir)
 
 # absolute angular velocity - degrees/s
 def gen_anvabs(raw_data, output_dir):
@@ -182,16 +182,16 @@ def sep_angx(raw_data, output_dir):
                 """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angle X']].copy()
+    df_ang_x = raw_data[['Time', 'Angle X']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angle X'] = pd.to_numeric(df_acc_x['Angle X'], errors='coerce') * 1.00
+    df_ang_x['Angle X'] = pd.to_numeric(df_ang_x['Angle X'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_ang_x = df_ang_x.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angle_X", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_ang_x), "Angle_X", output_dir)
 
 # angle in y - degrees
 def sep_angy(raw_data, output_dir):
@@ -202,16 +202,16 @@ def sep_angy(raw_data, output_dir):
                     """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angle Y']].copy()
+    df_ang_y = raw_data[['Time', 'Angle Y']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angle Y'] = pd.to_numeric(df_acc_x['Angle Y'], errors='coerce') * 1.00
+    df_ang_y['Angle Y'] = pd.to_numeric(df_ang_y['Angle Y'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_ang_y = df_ang_y.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angle_Y", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_ang_y), "Angle_Y", output_dir)
 
 # angle in z - degrees
 def sep_angz(raw_data, output_dir):
@@ -222,61 +222,114 @@ def sep_angz(raw_data, output_dir):
                     """
 
     # Select relevant columns
-    df_acc_x = raw_data[['Time', 'Angle Z']].copy()
+    df_ang_z = raw_data[['Time', 'Angle Z']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Angle Z'] = pd.to_numeric(df_acc_x['Angle Z'], errors='coerce') * 1.00
+    df_ang_z['Angle Z'] = pd.to_numeric(df_ang_z['Angle Z'], errors='coerce') * 1.00
 
     # Drop any rows with NaN (from failed conversion)
-    df_acc_x = df_acc_x.dropna().reset_index(drop=True)
+    df_ang_z = df_ang_z.dropna().reset_index(drop=True)
 
     # Save to same directory
-    return io.list_to_csv(pd.DataFrame(df_acc_x), "Angle_Z", output_dir)
+    return io.list_to_csv(pd.DataFrame(df_ang_z), "Angle_Z", output_dir)
 
 
 # magnetic field in x - micro teslas
 def sep_magx(raw_data, output_dir):
-    data_x = []
-    for i in range(1, len(raw_data)):
-        temp_x = [raw_data[i][0], raw_data[i][10]]
-        data_x.append(temp_x)
-    return io.list_to_csv(pd.DataFrame(data_x), "Magnetic_Field_in_X", output_dir)
+    """
+                    :param raw_data:
+                    :param output_dir:
+                    :return:
+                    """
+
+    # Select relevant columns
+    df_mag_x = raw_data[['Time', 'Magnetic field X']].copy()
+
+    # Convert Acceleration X to float and multiply by 9.81
+    df_mag_x['Magnetic field X'] = pd.to_numeric(df_mag_x['Magnetic field X'], errors='coerce') * 1.00
+
+    # Drop any rows with NaN (from failed conversion)
+    df_mag_x = df_mag_x.dropna().reset_index(drop=True)
+
+    # Save to same directory
+    return io.list_to_csv(pd.DataFrame(df_mag_x), "Magnetic field X", output_dir)
 
 # magnetic field in y - micro teslas
 def sep_magy(raw_data, output_dir):
-    data_y = []
-    for i in range(1, len(raw_data)):
-        temp_y = [raw_data[i][0], raw_data[i][11]]
-        data_y.append(temp_y)
-    return io.list_to_csv(pd.DataFrame(data_y), "Magnetic_Field_in_Y", output_dir)
+    """
+                    :param raw_data:
+                    :param output_dir:
+                    :return:
+                    """
+
+    # Select relevant columns
+    df_mag_y = raw_data[['Time', 'Magnetic field Y']].copy()
+
+    # Convert Acceleration X to float and multiply by 9.81
+    df_mag_y['Magnetic field Y'] = pd.to_numeric(df_mag_y['Magnetic field Y'], errors='coerce') * 1.00
+
+    # Drop any rows with NaN (from failed conversion)
+    df_mag_y = df_mag_y.dropna().reset_index(drop=True)
+
+    # Save to same directory
+    return io.list_to_csv(pd.DataFrame(df_mag_y), "Magnetic field Y", output_dir)
 
 # magnetic field in z - micro teslas
 def sep_magz(raw_data, output_dir):
-    data_z = []
-    for i in range(1, len(raw_data)):
-        temp_z = [raw_data[i][0], raw_data[i][12]]
-        data_z.append(temp_z)
-    return io.list_to_csv(pd.DataFrame(data_z), "Magnetic_Field_in_Z", output_dir)
+    """
+                    :param raw_data:
+                    :param output_dir:
+                    :return:
+                    """
+
+    # Select relevant columns
+    df_mag_z = raw_data[['Time', 'Magnetic field Z']].copy()
+
+    # Convert Acceleration X to float and multiply by 9.81
+    df_mag_z['Magnetic field Z'] = pd.to_numeric(df_mag_z['Magnetic field Z'], errors='coerce') * 1.00
+
+    # Drop any rows with NaN (from failed conversion)
+    df_mag_z = df_mag_z.dropna().reset_index(drop=True)
+
+    # Save to same directory
+    return io.list_to_csv(pd.DataFrame(df_mag_z), "Magnetic field Z", output_dir)
 
 # absolute magnetic field - micro teslas
 def gen_magabs(raw_data, output_dir):
+
     data_abs = []
-    x, y, z = 0, 0 ,0
-    for i in range(1, len(raw_data)):
-        x = float(raw_data[i][10])
-        y = float(raw_data[i][11])
-        z = float(raw_data[i][12])
-        temp_abs = [raw_data[i][0], str(np.sqrt(x**2+y**2+z**2))]
-        data_abs.append(temp_abs)
-    return io.list_to_csv(pd.DataFrame(data_abs), "Absolute_Magnetic_Field", output_dir)
+
+    for i in range(len(raw_data)):
+        t = raw_data.iloc[i, raw_data.columns.get_loc('Time')]
+        x = float(raw_data.iloc[i, raw_data.columns.get_loc('Magnetic field X')])
+        y = float(raw_data.iloc[i, raw_data.columns.get_loc('Magnetic field Y')])
+        z = float(raw_data.iloc[i, raw_data.columns.get_loc('AMagnetic field Z')])
+
+        data_abs.append([t, np.sqrt(x**2 + y**2 + z**2)])
+
+    df_abs = pd.DataFrame(data_abs, columns=['Time', 'Absolute Magnetic Field'])
+
+    return io.list_to_csv(df_abs, "Absolute_Magnetic_Field", output_dir)
 
 # temperature - degrees celsius
 def sep_temp(raw_data, output_dir):
-    data_t = []
-    for i in range(1, len(raw_data)):
-        temp_t = [raw_data[i][0], raw_data[i][13]]
-        data_t.append(temp_t)
-    return io.list_to_csv(pd.DataFrame(data_t), "Temperature", output_dir)
+    """
+                    :param raw_data:
+                    :param output_dir:
+                    :return:
+                    """
+
+    # Select relevant columns
+    df_temp = raw_data[['Time', 'Temperature']].copy()
+
+    # Convert Acceleration X to float and multiply by 9.81
+    df_temp['Temperature'] = pd.to_numeric(df_temp['Temperature'], errors='coerce') * 1.00
+
+    # Drop any rows with NaN (from failed conversion)
+    df_temp = df_temp.dropna().reset_index(drop=True)
+
+    # Save to same directory
+    return io.list_to_csv(pd.DataFrame(df_temp), "Temperature", output_dir)
 
 # time step fixer
 def timestep_fix(time: pd.Series):
