@@ -82,9 +82,13 @@ def csv_to_list(filename=None):
             'Angular velocity X': 'Angular velocity X',
             'Angular velocity Y': 'Angular velocity Y',
             'Angular velocity Z': 'Angular velocity Z',
+            'Angle X': 'Angle X',
+            'Angle Y': 'Angle Y',
+            'Angle Z': 'Angle Z',
             'Magnetic field X': 'Magnetic field X',
             'Magnetic field Y': 'Magnetic field Y',
             'Magnetic field Z': 'Magnetic field Z',
+            'Temperature' : 'Temperature',
         }
 
         raw_data = raw_data.rename(columns=lambda x: x.strip())
@@ -110,6 +114,9 @@ def csv_to_list(filename=None):
             print("All rows are complete. No missing values found.")
 
         print(f"Columns after cleaning: {list(cleaned_data.columns)}")
+
+        cleaned_data = cleaned_data.drop_duplicates(subset=["Time"]).reset_index(drop=True)
+
         return cleaned_data, output_dir, output_filename
 
     except Exception as e:

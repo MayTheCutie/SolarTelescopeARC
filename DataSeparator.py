@@ -3,21 +3,21 @@ import FileIO as io
 import numpy as np
 import pandas as pd
 
-# acceleration in x - m/s^2
 def sep_accx(raw_data, output_dir):
 
     """
+    acceleration in x - m/s^2
+
     :param raw_data:
     :param output_dir:
     :return:
     """
 
-
     # Select relevant columns
     df_acc_x = raw_data[['Time', 'Acceleration X']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_x['Acceleration X'] = pd.to_numeric(df_acc_x['Acceleration X'], errors='coerce') * 9.81
+    df_acc_x['Acceleration X'] = pd.to_numeric(df_acc_x['Acceleration X'], errors='coerce')
 
     # Drop any rows with NaN (from failed conversion)
     df_acc_x = df_acc_x.dropna().reset_index(drop=True)
@@ -26,10 +26,11 @@ def sep_accx(raw_data, output_dir):
     return io.list_to_csv(pd.DataFrame(df_acc_x), "Acceleration_X", output_dir)
 
 
-# acceleration in y - m/s^2
 def sep_accy(raw_data, output_dir):
 
     """
+    acceleration in y - m/s^2
+
     :param raw_data:
     :param output_dir:
     :return:
@@ -39,7 +40,7 @@ def sep_accy(raw_data, output_dir):
     df_acc_y = raw_data[['Time', 'Acceleration Y']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_y['Acceleration Y'] = pd.to_numeric(df_acc_y['Acceleration Y'], errors='coerce') * 9.81
+    df_acc_y['Acceleration Y'] = pd.to_numeric(df_acc_y['Acceleration Y'], errors='coerce')
 
     # Drop any rows with NaN (from failed conversion)
     df_acc_y = df_acc_y.dropna().reset_index(drop=True)
@@ -47,9 +48,11 @@ def sep_accy(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_acc_y), "Acceleration_Y", output_dir)
 
-# acceleration in z - m/s^2
 def sep_accz(raw_data, output_dir):
+
     """
+    acceleration in z - m/s^2
+
     :param raw_data:
     :param output_dir:
     :return:
@@ -59,7 +62,7 @@ def sep_accz(raw_data, output_dir):
     df_acc_z = raw_data[['Time', 'Acceleration Z']].copy()
 
     # Convert Acceleration X to float and multiply by 9.81
-    df_acc_z['Acceleration Z'] = pd.to_numeric(df_acc_z['Acceleration Z'], errors='coerce') * 9.81
+    df_acc_z['Acceleration Z'] = pd.to_numeric(df_acc_z['Acceleration Z'], errors='coerce')
 
     # Drop any rows with NaN (from failed conversion)
     df_acc_z = df_acc_z.dropna().reset_index(drop=True)
@@ -78,16 +81,23 @@ def sep_accabs(raw_data, output_dir):
 
 # absolute acceleration - m/s^2
 def gen_accabs(raw_data, output_dir):
+    """
+    absolute acceleration - m/s^2
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     data_abs = []
 
     for i in range(len(raw_data)):
         t = raw_data.iloc[i, raw_data.columns.get_loc('Time')]
-        x = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration X')*9.81])
-        y = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration Y')*9.81])
-        z = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration Z')*9.81])
+        x = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration X')]) - 1.0
+        y = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration Y')]) - 1.0
+        z = float(raw_data.iloc[i, raw_data.columns.get_loc('Acceleration Z')]) - 1.0
 
-        data_abs.append([t, np.sqrt(x**2 + y**2 + z**2)])
+        data_abs.append([t, int((np.sqrt(x**2 + y**2 + z**2)) * 1000 + 1e-12) / 1000])
 
     df_abs = pd.DataFrame(data_abs, columns=['Time', 'Absolute Acceleration'])
 
@@ -95,13 +105,14 @@ def gen_accabs(raw_data, output_dir):
 
 
 
-# angular velocity in x - degrees/s
 def sep_anvx(raw_data, output_dir):
     """
-        :param raw_data:
-        :param output_dir:
-        :return:
-        """
+    angular velocity in x - degrees/s
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_anv_x = raw_data[['Time', 'Angular velocity X']].copy()
@@ -115,13 +126,14 @@ def sep_anvx(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_anv_x), "Angular_Velocity_X", output_dir)
 
-# angular velocity in y - degrees/s
 def sep_anvy(raw_data, output_dir):
     """
-            :param raw_data:
-            :param output_dir:
-            :return:
-            """
+    angular velocity in y - degrees/s
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_anv_y = raw_data[['Time', 'Angular velocity Y']].copy()
@@ -135,13 +147,14 @@ def sep_anvy(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_anv_y), "Angular_Velocity_Y", output_dir)
 
-# angular velocity in z - degrees/s
 def sep_anvz(raw_data, output_dir):
     """
-            :param raw_data:
-            :param output_dir:
-            :return:
-            """
+    angular velocity in z - degrees/s
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_anv_z = raw_data[['Time', 'Angular velocity Z']].copy()
@@ -155,8 +168,14 @@ def sep_anvz(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_anv_z), "Angular_Velocity_Z", output_dir)
 
-# absolute angular velocity - degrees/s
 def gen_anvabs(raw_data, output_dir):
+    """
+    absolute angular velocity - degrees/s
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     data_abs = []
 
@@ -166,20 +185,20 @@ def gen_anvabs(raw_data, output_dir):
         y = float(raw_data.iloc[i, raw_data.columns.get_loc('Angular velocity Y')])
         z = float(raw_data.iloc[i, raw_data.columns.get_loc('Angular velocity Z')])
 
-        data_abs.append([t, np.sqrt(x**2 + y**2 + z**2)])
+        data_abs.append([t, int((np.sqrt(x**2 + y**2 + z**2)) * 1000 + 1e-12) / 1000])
 
     df_abs = pd.DataFrame(data_abs, columns=['Time', 'Absolute Angular Velocity'])
 
     return io.list_to_csv(df_abs, "Absolute_Angular_Velocity", output_dir)
 
-
-# angle in x - degrees
 def sep_angx(raw_data, output_dir):
     """
-                :param raw_data:
-                :param output_dir:
-                :return:
-                """
+    angle in x - degrees
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_ang_x = raw_data[['Time', 'Angle X']].copy()
@@ -193,13 +212,14 @@ def sep_angx(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_ang_x), "Angle_X", output_dir)
 
-# angle in y - degrees
 def sep_angy(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    angle in y - degrees
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_ang_y = raw_data[['Time', 'Angle Y']].copy()
@@ -213,13 +233,14 @@ def sep_angy(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_ang_y), "Angle_Y", output_dir)
 
-# angle in z - degrees
 def sep_angz(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    angle in z - degrees
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_ang_z = raw_data[['Time', 'Angle Z']].copy()
@@ -233,14 +254,14 @@ def sep_angz(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_ang_z), "Angle_Z", output_dir)
 
-
-# magnetic field in x - micro teslas
 def sep_magx(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    magnetic field in x - micro teslas
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_mag_x = raw_data[['Time', 'Magnetic field X']].copy()
@@ -254,13 +275,14 @@ def sep_magx(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_mag_x), "Magnetic field X", output_dir)
 
-# magnetic field in y - micro teslas
 def sep_magy(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    magnetic field in y - micro teslas
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_mag_y = raw_data[['Time', 'Magnetic field Y']].copy()
@@ -274,13 +296,14 @@ def sep_magy(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_mag_y), "Magnetic field Y", output_dir)
 
-# magnetic field in z - micro teslas
 def sep_magz(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    magnetic field in z - micro teslas
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_mag_z = raw_data[['Time', 'Magnetic field Z']].copy()
@@ -294,8 +317,14 @@ def sep_magz(raw_data, output_dir):
     # Save to same directory
     return io.list_to_csv(pd.DataFrame(df_mag_z), "Magnetic field Z", output_dir)
 
-# absolute magnetic field - micro teslas
 def gen_magabs(raw_data, output_dir):
+    """
+    absolute magnetic field - micro teslas
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     data_abs = []
 
@@ -303,21 +332,23 @@ def gen_magabs(raw_data, output_dir):
         t = raw_data.iloc[i, raw_data.columns.get_loc('Time')]
         x = float(raw_data.iloc[i, raw_data.columns.get_loc('Magnetic field X')])
         y = float(raw_data.iloc[i, raw_data.columns.get_loc('Magnetic field Y')])
-        z = float(raw_data.iloc[i, raw_data.columns.get_loc('AMagnetic field Z')])
+        z = float(raw_data.iloc[i, raw_data.columns.get_loc('Magnetic field Z')])
 
-        data_abs.append([t, np.sqrt(x**2 + y**2 + z**2)])
+
+        data_abs.append([t, int((np.sqrt(x**2 + y**2 + z**2)) * 1000 + 1e-12) / 1000])
 
     df_abs = pd.DataFrame(data_abs, columns=['Time', 'Absolute Magnetic Field'])
 
     return io.list_to_csv(df_abs, "Absolute_Magnetic_Field", output_dir)
 
-# temperature - degrees celsius
 def sep_temp(raw_data, output_dir):
     """
-                    :param raw_data:
-                    :param output_dir:
-                    :return:
-                    """
+    temperature - degrees celsius
+
+    :param raw_data:
+    :param output_dir:
+    :return:
+    """
 
     # Select relevant columns
     df_temp = raw_data[['Time', 'Temperature']].copy()
@@ -386,26 +417,38 @@ def main():
         sep_accx(raw_data, output_dir)
 
         # Generate and save new CSV files in the same directory
-        sep_accx(raw_data, output_dir) #@TODO: errors occur in the funcs
-                                       # our crude attempt at implementing pandas went poorly :(
+        sep_accx(raw_data, output_dir)
         print("spot 3")
         sep_accy(raw_data, output_dir)
         print("spot 4")
         sep_accz(raw_data, output_dir)
         print("spot 5")
         gen_accabs(raw_data, output_dir)
+        print("spot 6")
         sep_anvx(raw_data, output_dir)
+        print("spot 7")
         sep_anvy(raw_data, output_dir)
+        print("spot 8")
         sep_anvz(raw_data, output_dir)
+        print("spot 9")
         gen_anvabs(raw_data, output_dir)
+        print("spot 10")
         sep_angx(raw_data, output_dir)
+        print("spot 11")
         sep_angy(raw_data, output_dir)
+        print("spot 12")
         sep_angz(raw_data, output_dir)
+        print("spot 13")
         sep_magx(raw_data, output_dir)
+        print("spot 14")
         sep_magy(raw_data, output_dir)
+        print("spot 15")
         sep_magz(raw_data, output_dir)
+        print("spot 16")
         gen_magabs(raw_data, output_dir)
+        print("spot 17")
         sep_temp(raw_data, output_dir)
+        print("spot 18")
 
     except Exception as e:
         print(f"An error occurred: {e}")
