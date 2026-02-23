@@ -74,25 +74,26 @@ def csv_to_list(filename=None):
         raw_data = pd.read_csv(filename, skipinitialspace=True)
         raw_data.columns = [c.strip() for c in raw_data.columns]
 
-        # Standardize all expected names
-        rename_map = {
-            'Acceleration X': 'Acceleration X',
-            'Acceleration Y': 'Acceleration Y',
-            'Acceleration Z': 'Acceleration Z',
-            'Angular velocity X': 'Angular velocity X',
-            'Angular velocity Y': 'Angular velocity Y',
-            'Angular velocity Z': 'Angular velocity Z',
-            'Angle X': 'Angle X',
-            'Angle Y': 'Angle Y',
-            'Angle Z': 'Angle Z',
-            'Magnetic field X': 'Magnetic field X',
-            'Magnetic field Y': 'Magnetic field Y',
-            'Magnetic field Z': 'Magnetic field Z',
-            'Temperature' : 'Temperature',
-        }
+        if(input("wanna rename the headers?")):
+            # Standardize all expected names
+            rename_map = {
+                'Acceleration X': 'Acceleration X',
+                'Acceleration Y': 'Acceleration Y',
+                'Acceleration Z': 'Acceleration Z',
+                'Angular velocity X': 'Angular velocity X',
+                'Angular velocity Y': 'Angular velocity Y',
+                'Angular velocity Z': 'Angular velocity Z',
+                'Angle X': 'Angle X',
+                'Angle Y': 'Angle Y',
+                'Angle Z': 'Angle Z',
+                'Magnetic field X': 'Magnetic field X',
+                'Magnetic field Y': 'Magnetic field Y',
+                'Magnetic field Z': 'Magnetic field Z',
+                'Temperature' : 'Temperature',
+            }
 
-        raw_data = raw_data.rename(columns=lambda x: x.strip())
-        raw_data = raw_data.rename(columns=rename_map)
+            raw_data = raw_data.rename(columns=lambda x: x.strip())
+            raw_data = raw_data.rename(columns=rename_map)
 
         # Fix Unnamed: 0 if present
         if 'Unnamed 0' in raw_data.columns:
