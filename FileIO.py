@@ -74,7 +74,7 @@ def csv_to_list(filename=None):
         raw_data = pd.read_csv(filename, skipinitialspace=True)
         raw_data.columns = [c.strip() for c in raw_data.columns]
 
-        if(input("wanna rename the headers?")):
+        if input("wanna rename the headers?")=="yes":
             # Standardize all expected names
             rename_map = {
                 'Acceleration X': 'Acceleration X',
@@ -103,10 +103,12 @@ def csv_to_list(filename=None):
         raw_data = raw_data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
         # Keep only rows where all values are present (not empty and not NaN)
-        empty_mask = raw_data.applymap(lambda x: x == "" if isinstance(x, str) else False)
-        nan_mask = raw_data.isna()
-        invalid_mask = empty_mask | nan_mask
-        cleaned_data = raw_data[~invalid_mask.any(axis=1)].reset_index(drop=True)
+        cleaned_data = (
+            raw_data
+            .replace("", pd.NA)  # turn "" into NA
+            .dropna()  # now drop rows with NA
+            .reset_index(drop=True)
+        )
 
         removed_rows = len(raw_data) - len(cleaned_data)
         if removed_rows > 0:
