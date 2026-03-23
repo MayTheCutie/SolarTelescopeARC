@@ -1,0 +1,27 @@
+USE OF THIS LAPTOP ONLY FOR ASTROPHYSICS RESEARCH CLUB
+
+Having issues?
+DM @rosesweatergirl on Discord
+
+PIN (no spaces): solar_telescope 
+
+
+
+USE OF GIT BASH:
+
+Right-click SolarTelescopeARC (or your working directory) -> if you make a new research dedicated folder, please make a shortcut to it in the desktop.
+
+Open "Show More Options" then click "Open in Terminal"
+
+Follow this sequence of commands (you can copy-paste them):
+git add -a
+git add [absolute path to file]
+	To copy absolute path, left click the file, and push the following key combination: CTRL SHIFT C
+	Example: D:\SolarTelescopeARC\DataSeparator.py
+git commit -m "[your commit message"]
+git push
+
+You may use 'git help' to see all commands
+
+To change to a subdirectory: cd .\[relative path] OR cd [absolute path]
+Example: cd .\Data OR cd D:\SolarTelescopeARC\Data <- those are backslashes
